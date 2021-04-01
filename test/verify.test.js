@@ -28,9 +28,20 @@ describe('Verify', () => {
     }
   })
 
-  it('expect a SemanticReleaseError if a service option is not defined', () => {
+  it('expect a SemanticReleaseError if a services option is not defined', () => {
     try {
       pluginConfig.dockerHost = 'ssh://user@host'
+      verify(pluginConfig, context)
+    } catch (errs) {
+      const err = errs._errors[0]
+      expect(err.name).to.equal('SemanticReleaseError')
+      expect(err.code).to.equal('ENODOCKERSERVICES')
+    }
+  })
+
+  it('expect a SemanticReleaseError if a services[].name option is not defined', () => {
+    try {
+      pluginConfig.services = [{}]
       verify(pluginConfig, context)
     } catch (errs) {
       const err = errs._errors[0]
@@ -39,9 +50,9 @@ describe('Verify', () => {
     }
   })
 
-  it('expect a SemanticReleaseError if a image option is not defined', () => {
+  it('expect a SemanticReleaseError if a services[].image option is not defined', () => {
     try {
-      pluginConfig.service = 'mystack_myservice'
+      pluginConfig.services = [{ name: 'mystack_myservice' }]
       verify(pluginConfig, context)
     } catch (errs) {
       const err = errs._errors[0]
@@ -50,10 +61,10 @@ describe('Verify', () => {
     }
   })
 
-  it('expect a SemanticReleaseError if a updateOrder is invalid', () => {
+  it('expect a SemanticReleaseError if a services[].updateOrder is invalid', () => {
     try {
-      pluginConfig.image = 'myimage:latest'
-      pluginConfig.updateOrder = 'StartFirst'
+      pluginConfig.services[0].image = 'myimage:latest'
+      pluginConfig.services[0].updateOrder = 'StartFirst'
       verify(pluginConfig, context)
     } catch (errs) {
       const err = errs._errors[0]
@@ -63,7 +74,7 @@ describe('Verify', () => {
   })
 
   it('expect success verify', () => {
-    pluginConfig.updateOrder = 'start-first'
+    pluginConfig.services[0].updateOrder = 'start-first'
     expect(verify(pluginConfig, context)).to.be.a('undefined')
   })
 })

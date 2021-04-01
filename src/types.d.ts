@@ -9,11 +9,14 @@ export interface Context
     SemanticReleaseConfig,
     SemanticReleaseResult {}
 
-export interface Config {
-  dockerHost?: string
-  service?: string
+export interface SwarmService {
+  name?: string
   image?: string
   updateOrder?: string
+}
+export interface Config {
+  dockerHost?: string
+  services?: SwarmService[]
 }
 
 export interface SemanticReleaseError {

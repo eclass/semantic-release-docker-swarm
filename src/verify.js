@@ -17,17 +17,26 @@ module.exports = (pluginConfig, ctx) => {
   if (!pluginConfig.dockerHost) {
     errors.push(getError('ENODOCKERHOST', ctx))
   }
-  if (!pluginConfig.service) {
-    errors.push(getError('ENODOCKERSERVICE', ctx))
-  }
-  if (!pluginConfig.image) {
-    errors.push(getError('ENODOCKERIMAGE', ctx))
-  }
   if (
-    pluginConfig.updateOrder &&
-    !['start-first', 'stop-first'].includes(pluginConfig.updateOrder)
+    !Array.isArray(pluginConfig.services) ||
+    pluginConfig.services.length === 0
   ) {
-    errors.push(getError('EINVALIDUPDATEORDER', ctx))
+    errors.push(getError('ENODOCKERSERVICES', ctx))
+  } else {
+    pluginConfig.services.forEach(service => {
+      if (!service.name) {
+        errors.push(getError('ENODOCKERSERVICE', ctx))
+      }
+      if (!service.image) {
+        errors.push(getError('ENODOCKERIMAGE', ctx))
+      }
+      if (
+        service.updateOrder &&
+        !['start-first', 'stop-first'].includes(service.updateOrder)
+      ) {
+        errors.push(getError('EINVALIDUPDATEORDER', ctx))
+      }
+    })
   }
   if (errors.length > 0) {
     throw new AggregateError(errors)

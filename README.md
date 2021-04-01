@@ -82,9 +82,18 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
       "@eclass/semantic-release-docker-swarm",
       {
         "dockerHost": "ssh://username@host",
-        "service": "mystack_myservice",
-        "image": "registry.gitlab.com/mygroup/myapp",
-        "updateOrder": "start-first"
+        "services": [
+          {
+            "name": "mystack_myservice",
+            "image": "registry.gitlab.com/mygroup/myapp",
+            "updateOrder": "start-first"
+          },
+          {
+            "name": "mystack_myworker",
+            "image": "registry.gitlab.com/mygroup/myapp",
+            "updateOrder": "stop-first"
+          }
+        ]
       }
     ]
   ]

@@ -27,8 +27,21 @@ module.exports = new Map([
     ctx => ({
       message: 'No docker host specified.',
       details: `A [docker host](${linkify(
-        'README.md#environment-variables'
+        'README.md#options'
       )}) must be set \`dockerHost\` in plugin config.`
+    })
+  ],
+  [
+    'ENODOCKERSERVICES',
+    /**
+     * @param {Context} ctx -
+     * @returns {SemanticReleaseError} -
+     */
+    ctx => ({
+      message: 'No docker services specified.',
+      details: `A [docker services](${linkify(
+        'README.md#options'
+      )}) must be set \`services\` in plugin config.`
     })
   ],
   [
@@ -40,8 +53,8 @@ module.exports = new Map([
     ctx => ({
       message: 'No docker service specified.',
       details: `A [docker service](${linkify(
-        'README.md#environment-variables'
-      )}) must be set \`service\` in plugin config.`
+        'README.md#options'
+      )}) must be set \`name\` in object \`service\` inside of \`services\` \`array\`.`
     })
   ],
   [
@@ -53,8 +66,8 @@ module.exports = new Map([
     ctx => ({
       message: 'No docker image specified.',
       details: `A [docker image](${linkify(
-        'README.md#environment-variables'
-      )}) must be set \`image\` in plugin config.`
+        'README.md#options'
+      )}) must be set \`image\` in object \`service\` inside of \`services\` \`array\`.`
     })
   ],
   [
@@ -66,8 +79,8 @@ module.exports = new Map([
     ctx => ({
       message: 'Invalid updateOrder.',
       details: `The [updateOrder option](${linkify(
-        'README.md#environment-variables'
-      )}), if defined,  must be one of \`start-first\` or \`stop-first\` in plugin config.`
+        'README.md#options'
+      )}), if defined,  must be one of \`start-first\` or \`stop-first\` in object \`service\` inside of \`services\` \`array\`.`
     })
   ],
   [

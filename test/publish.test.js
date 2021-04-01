@@ -7,7 +7,15 @@ const { WritableStreamBuffer, ReadableStreamBuffer } = require('stream-buffers')
 describe('Publish', () => {
   let publish
   /** @type {import('../src/types').Config} */
-  const pluginConfig = {}
+  const pluginConfig = {
+    services: [
+      {
+        name: 'mystack_myservice',
+        image: 'myimage',
+        updateOrder: 'start-first'
+      }
+    ]
+  }
   /** @type {import('../src/types').Context} */
   const context = {
     // @ts-ignore
