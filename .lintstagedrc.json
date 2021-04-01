@@ -1,9 +1,5 @@
 {
-  "{src,test}/**/*.js": [
-    "eslint --fix",
-    "prettier-standard"
-  ],
-  "{src,test}/**/*.ts": [
-    "prettier-standard"
-  ]
+  "{src,test}/**/*.js": ["eslint --fix", "prettier-standard"],
+  "{src,test}/**/*.ts": ["prettier-standard"],
+  "*.{json,yml,md}": ["prettier-standard"]
 }

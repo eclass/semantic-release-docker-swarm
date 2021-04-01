@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [ "es2017", "es7" ],
+    "lib": ["es2017", "es7"],
     "allowJs": true,
     "checkJs": true,
     "downlevelIteration": true,
@@ -8,8 +8,5 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "exclude": [
-    "node_modules",
-    "coverage"
-  ]
+  "exclude": ["node_modules", "coverage"]
 }
