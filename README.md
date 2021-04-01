@@ -1,25 +1,25 @@
-# @eclass/semantic-release-custom-plugin
+# @eclass/semantic-release-docker-swarm
 
-[![npm](https://img.shields.io/npm/v/@eclass/semantic-release-custom-plugin.svg)](https://www.npmjs.com/package/@eclass/semantic-release-custom-plugin)
-[![build](https://img.shields.io/travis/eclass/semantic-release-custom-plugin.svg)](https://travis-ci.org/eclass/semantic-release-custom-plugin)
-[![downloads](https://img.shields.io/npm/dt/@eclass/semantic-release-custom-plugin.svg)](https://www.npmjs.com/package/@eclass/semantic-release-custom-plugin)
-[![dependencies](https://img.shields.io/david/eclass/semantic-release-custom-plugin.svg)](https://david-dm.org/eclass/semantic-release-custom-plugin)
-[![devDependency Status](https://img.shields.io/david/dev/eclass/semantic-release-custom-plugin.svg)](https://david-dm.org/eclass/semantic-release-custom-plugin#info=devDependencies)
-[![Coverage Status](https://coveralls.io/repos/github/eclass/semantic-release-custom-plugin/badge.svg?branch=master)](https://coveralls.io/github/eclass/semantic-release-custom-plugin?branch=master)
-[![Maintainability](https://api.codeclimate.com/v1/badges/f84f0bcb39c9a5c5fb99/maintainability)](https://codeclimate.com/github/eclass/semantic-release-custom-plugin/maintainability)
+[![npm](https://img.shields.io/npm/v/@eclass/semantic-release-docker-swarm.svg)](https://www.npmjs.com/package/@eclass/semantic-release-docker-swarm)
+![Node.js CI](https://github.com/eclass/semantic-release-docker-swarm/workflows/Node.js%20CI/badge.svg)
+[![downloads](https://img.shields.io/npm/dt/@eclass/semantic-release-docker-swarm.svg)](https://www.npmjs.com/package/@eclass/semantic-release-docker-swarm)
+[![dependencies](https://img.shields.io/david/eclass/semantic-release-docker-swarm.svg)](https://david-dm.org/eclass/semantic-release-docker-swarm)
+[![devDependency Status](https://img.shields.io/david/dev/eclass/semantic-release-docker-swarm.svg)](https://david-dm.org/eclass/semantic-release-docker-swarm#info=devDependencies)
+[![Coverage Status](https://coveralls.io/repos/github/eclass/semantic-release-docker-swarm/badge.svg?branch=master)](https://coveralls.io/github/eclass/semantic-release-docker-swarm?branch=master)
+[![Maintainability](https://api.codeclimate.com/v1/badges/f84f0bcb39c9a5c5fb99/maintainability)](https://codeclimate.com/github/eclass/semantic-release-docker-swarm/maintainability)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-> [semantic-release](https://github.com/semantic-release/semantic-release) plugin to deploy app
+> [semantic-release](https://github.com/semantic-release/semantic-release) plugin to deploy docker swarm service
 
-| Step               | Description                                                                                 |
-|--------------------|---------------------------------------------------------------------------------------------|
-| `verifyConditions` | Verify the presence of the `CUSTOM_ENV` environment variable. |
-| `publish`          | Deploy app.                                                                   |
+| Step               | Description                                |
+| ------------------ | ------------------------------------------ |
+| `verifyConditions` | Verify the presence of the plugin options. |
+| `publish`          | Deploy app.                                |
 
 ## Install
 
 ```bash
-npm i -D @eclass/semantic-release-custom-plugin
+npm i -D @eclass/semantic-release-docker-swarm
 ```
 
 ## Usage
@@ -33,18 +33,21 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
     "@semantic-release/npm",
     "@semantic-release/git",
     "@semantic-release/gitlab",
-    "@eclass/semantic-release-custom-plugin"
+    "@eclass/semantic-release-docker-swarm"
   ]
 }
 ```
 
 ## Configuration
 
-### Environment variables
+### Options
 
-| Variable             | Description                                                       |
-| -------------------- | ----------------------------------------------------------------- |
-| `CUSTOM_ENV` | A custom env var |
+| Variable      | Description                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------ |
+| `dockerHost`  | URI for connect to remote docker host. Required. Example: `ssh://username@host`                  |
+| `service`     | Name of the docker swarm service. Required.                                                      |
+| `image`       | Name of docker image. Required. Example: `registry.gitlab.com/mygroup/myapp`                     |
+| `updateOrder` | Order to update the service. Only `start-first` or `stop-first`. Optional. Default: `stop-first` |
 
 ### Examples
 
@@ -55,7 +58,35 @@ The plugin can be configured in the [**semantic-release** configuration file](ht
     "@semantic-release/npm",
     "@semantic-release/git",
     "@semantic-release/gitlab",
-    "@eclass/semantic-release-custom-plugin"
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "sh .release/buildimage.sh"
+      }
+    ],
+    [
+      "@eclass/semantic-release-docker",
+      {
+        "baseImageName": "registry.gitlab.com/mygroup/myapp",
+        "registries": [
+          {
+            "url": "registry.gitlab.com",
+            "imageName": "registry.gitlab.com/mygroup/myapp",
+            "user": "CI_REGISTRY_USER",
+            "password": "CI_REGISTRY_PASSWORD"
+          }
+        ]
+      }
+    ],
+    [
+      "@eclass/semantic-release-docker-swarm",
+      {
+        "dockerHost": "ssh://username@host",
+        "service": "mystack_myservice",
+        "image": "registry.gitlab.com/mygroup/myapp",
+        "updateOrder": "start-first"
+      }
+    ]
   ]
 }
 ```
@@ -78,7 +109,7 @@ cache:
   directories:
     - ~/.npm
 node_js:
-  - "12"
+  - '12'
 stages:
   - test
   - name: deploy
@@ -89,7 +120,6 @@ jobs:
       script: npm t
     - stage: deploy
       script: npx semantic-release
-
 ```
 
 ## License

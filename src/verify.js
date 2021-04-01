@@ -1,3 +1,4 @@
+const AggregateError = require('aggregate-error')
 const getError = require('./get-error')
 
 /**
@@ -12,7 +13,23 @@ const getError = require('./get-error')
  * verifyConditions(pluginConfig, ctx)
  */
 module.exports = (pluginConfig, ctx) => {
-  if (!ctx.env.CUSTOM_ENV) {
-    throw getError('CUSTOMERROR', ctx)
+  const errors = []
+  if (!pluginConfig.dockerHost) {
+    errors.push(getError('ENODOCKERHOST', ctx))
+  }
+  if (!pluginConfig.service) {
+    errors.push(getError('ENODOCKERSERVICE', ctx))
+  }
+  if (!pluginConfig.image) {
+    errors.push(getError('ENODOCKERIMAGE', ctx))
+  }
+  if (
+    pluginConfig.updateOrder &&
+    !['start-first', 'stop-first'].includes(pluginConfig.updateOrder)
+  ) {
+    errors.push(getError('EINVALIDUPDATEORDER', ctx))
+  }
+  if (errors.length > 0) {
+    throw new AggregateError(errors)
   }
 }

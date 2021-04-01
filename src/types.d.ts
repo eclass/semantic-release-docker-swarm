@@ -9,7 +9,12 @@ export interface Context
     SemanticReleaseConfig,
     SemanticReleaseResult {}
 
-export interface Config {}
+export interface Config {
+  dockerHost?: string
+  service?: string
+  image?: string
+  updateOrder?: string
+}
 
 export interface SemanticReleaseError {
   message: string
