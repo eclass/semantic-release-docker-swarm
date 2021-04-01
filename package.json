@@ -1,6 +1,6 @@
 {
   "name": "@eclass/semantic-release-docker-swarm",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "semantic-release plugin to deploy docker swarm service",
   "main": "src/index.js",
   "scripts": {
