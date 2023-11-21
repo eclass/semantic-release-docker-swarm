@@ -41,7 +41,7 @@
     "@types/mocha": "8.2.2",
     "@types/mock-require": "2.0.0",
     "@types/node": "14.18.10",
-    "@types/semantic-release": "17.2.0",
+    "@types/semantic-release": "17.2.11",
     "@types/stream-buffers": "3.0.3",
     "chai": "4.3.4",
     "eslint": "7.32.0",
